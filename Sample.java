@@ -58,6 +58,84 @@ class MyHashSet {
     }
 }
 
+//Separate chaining
+//TC:0(n)
+//SC:0(n)
+class MyHashSet {
+    Node[] storage;
+    int bucket;
+
+    private class Node{
+        int key;
+        Node next;
+        public Node(int key){
+            this.key=key;
+        }
+    }
+
+    private Node find(Node dummy,int key){
+        Node prev=dummy;
+        Node curr=dummy.next;
+        while(curr!=null && curr.key!=key){
+            prev=curr;
+            curr=curr.next;
+        }
+        return prev;
+    }
+
+    private int getBucket(int key){
+        return key%bucket;
+    }
+
+    public MyHashSet() {
+        this.bucket=1000;
+        storage=new Node[this.bucket];
+    }
+
+    public void add(int key) {
+        int bucketValue=getBucket(key);
+        if(storage[bucketValue]==null){
+            storage[bucketValue]=new Node(-1);
+        }
+        Node prev=find(storage[bucketValue],key);
+        if(prev.next==null){
+            Node newNode=new Node(key);
+            prev.next=newNode;
+        }
+    }
+
+    public void remove(int key) {
+        int bucketValue=getBucket(key);
+        if(storage[bucketValue]!=null){
+            Node prev=find(storage[bucketValue],key);
+            if(prev.next!=null){
+                prev.next=prev.next.next;
+            }
+        }
+    }
+
+    public boolean contains(int key) {
+        int bucketValue=getBucket(key);
+        if(storage[bucketValue]!=null){
+            Node prev=find(storage[bucketValue],key);
+            if(prev.next!=null){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your MyHashSet object will be instantiated and called as such:
+ * MyHashSet obj = new MyHashSet();
+ * obj.add(key);
+ * obj.remove(key);
+ * boolean param_3 = obj.contains(key);
+ */
+
 /**
  * Your MyHashSet object will be instantiated and called as such:
  * MyHashSet obj = new MyHashSet();
